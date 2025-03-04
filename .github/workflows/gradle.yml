@@ -8,10 +8,6 @@
 name: Java CI with Gradle
 
 on:
-  push:
-    branches:
-      - 'main'
-      - 'develop'
   pull_request:
     branches:
       - 'main'
@@ -38,7 +34,7 @@ jobs:
       uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew build --warning-mode all
+      run: ./gradlew installDist --warning-mode all
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
@@ -50,6 +46,12 @@ jobs:
     #
     # - name: Build with Gradle 8.9
     #   run: gradle build
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-result
+        path: build/install/${YOUR_APP_NAME}/lib
 
   dependency-submission:
 
