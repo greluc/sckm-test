@@ -1,0 +1,31 @@
+name: Deploy
+on: [workflow_dispatch]
+jobs:
+  build:
+    # Use the Build workflow described above
+    uses: ./.github/workflows/build.yml
+
+  deploy:
+    needs: [build]
+
+    # Important: must be run from Linux.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          # This is the name of the "Upload artifact" action above.
+          name: build-result
+
+          # This path is pointed to by your conveyor.conf
+          path: ./artifacts
+
+      - name: Run Conveyor
+        uses: hydraulic-software/conveyor/actions/build@v9.1
+        with:
+          command: make site
+          signing_key: ${{ secrets.SIGNING_KEY }}
+          agree_to_license: 1
