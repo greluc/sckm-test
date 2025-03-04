@@ -2,7 +2,6 @@ name: Deploy
 on: [workflow_dispatch]
 jobs:
   build:
-    # Use the Build workflow described above
     uses: ./.github/workflows/build.yml
 
   deploy:
@@ -17,10 +16,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          # This is the name of the "Upload artifact" action above.
           name: build-result
-
-          # This path is pointed to by your conveyor.conf
           path: ./artifacts
 
       - name: Run Conveyor
